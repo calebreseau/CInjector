@@ -9,3 +9,5 @@ It has three injection methods:
 
 
 A lot of the functions used here have been written using the help of erwan.labalec.fr
+
+Site webpage: https://caldevelopment.wordpress.com/cinjector/
