@@ -94,7 +94,7 @@ const
 
 implementation
 
-function getsysprocesshandle(pid:dword):thandle;
+function getsysprocesshandle(pid:dword):thandle;  //probably not working
 var
   handleinfosize:ulong;
   handleinfo:psystem_handle_information;
@@ -123,7 +123,11 @@ begin
      _handle:=handleinfo^.Handles[i];
      _process:=_handle.Handle;
      GetWindowThreadProcessId(_process,_pid);
-     if {(_handle.uIdProcess=getcurrentprocessid) and }(_pid=pid) then result:=_process;
+     if {(_handle.uIdProcess=getcurrentprocessid) and }(_pid=pid) then
+     begin
+          result:=_process;
+          break;
+     end;
    end;
 
 end;

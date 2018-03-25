@@ -27,7 +27,7 @@ type
   PSYSTEM_HANDLE_INFORMATION=^SYSTEM_HANDLE_INFORMATION;
   ntstatus=integer;
 
-  function enumprocesses(output:tstringlist):dword;
+  procedure enumprocesses(output:tstringlist);
   function SetPrivilege(privilegeName: string; enable: boolean): boolean;
   function AllocMemAlign(const ASize, AAlign: Cardinal; out AHolder: Pointer): Pointer;
   function getmainthreadid(pid:dword64):dword;
@@ -62,7 +62,7 @@ begin
   CloseHandle(tempHandle);
 end;
 
-function enumprocesses(output:tstringlist):dword;
+procedure enumprocesses(output:tstringlist);
 var
   Snapshot: THandle;
   pe: TProcessEntry32;
@@ -134,8 +134,8 @@ end;
 function getmainthreadid(pid:dword64):dword;
 var
   hThreadSnapshot:thandle;
+  currentpid:dword;
   tentry:threadentry32;
-  currentpid:integer;
   _tid:thandle;
   _creationtime,_exittime,_kerneltime,_usertime:windows.FILETIME;
   ctime:ularge_integer;

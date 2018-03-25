@@ -5,7 +5,7 @@ unit wininjection;
 interface
 
 uses
-  Classes, SysUtils,jwatlhelp32,jwawintype,windows,dialogs,ntdll,winmiscutils;
+  Classes, SysUtils,windows,dialogs,ntdll,winmiscutils;
 
 
   function injectsys(ahandle:thandle;susp:boolean;th:thandle;ch:client_id;dll:string):dword;
@@ -19,22 +19,21 @@ implementation
 
 function injectapc( hprocess,hthread:thandle;dll:string):boolean;
 var
-lpDllAddr,lploadLibraryAddr:pointer;
-byteswritten:nativeuint;
+    lpDllAddr,lploadLibraryAddr:pointer;
+    byteswritten:nativeuint;
 begin
-//memory address for dll
-lpDllAddr := VirtualAllocEx(hProcess, nil, length(dll), MEM_COMMIT or MEM_RESERVE, PAGE_READWRITE);
-WriteProcessMemory(hProcess, lpDllAddr, @dll[1], length(dll), byteswritten); // write dll path
-if byteswritten =0 then exit;
-OutputDebugString(pchar('lpDllAddr:'+inttohex(nativeuint(lpDllAddr),8)+' '+inttostr(byteswritten )+' written'));
-//memory address of loadlibrary
-lploadLibraryAddr := GetProcAddress(GetModuleHandle('kernel32.dll'), 'LoadLibraryA');
-OutputDebugString(pchar('loadLibraryAddress:'+inttohex(nativeuint(lploadLibraryAddr),8)));
-//
-if QueueUserAPC(GetProcAddress(LoadLibraryA('kernel32.dll'), 'LoadLibraryA'), hThread, nativeuint(lpDllAddr))=0
-   then result:=false
-   else result:=true;
-
+    //memory address for dll
+    lpDllAddr := VirtualAllocEx(hProcess, nil, length(dll), MEM_COMMIT or MEM_RESERVE, PAGE_READWRITE);
+    WriteProcessMemory(hProcess, lpDllAddr, @dll[1], length(dll), byteswritten); // write dll path
+    if byteswritten =0 then exit;
+    OutputDebugString(pchar('lpDllAddr:'+inttohex(nativeuint(lpDllAddr),8)+' '+inttostr(byteswritten )+' written'));
+    //memory address of loadlibrary
+    lploadLibraryAddr := GetProcAddress(GetModuleHandle('kernel32.dll'), 'LoadLibraryA');
+    OutputDebugString(pchar('loadLibraryAddress:'+inttohex(nativeuint(lploadLibraryAddr),8)));
+    //
+    if QueueUserAPC(GetProcAddress(LoadLibraryA('kernel32.dll'), 'LoadLibraryA'), hThread, nativeuint(lpDllAddr))=0
+       then result:=false
+       else result:=true;
 end;
 
 function injectctx(hprocess, hthread: thandle; dll: string): boolean;
@@ -66,7 +65,6 @@ var
   lpDllAddr, stub, lploadLibraryAddr: pointer;
    dwdlladdr, dwloadlibraryaddr: nativeuint;
   oldip,byteswritten: nativeuint;
-  l,h:dword;
   ctx: PContext;
   Storage: Pointer;
   i:byte;
