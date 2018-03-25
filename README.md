@@ -8,4 +8,4 @@ It has three injection methods:
    * RtlCreateUserThread: Load your DLL in a process that is running under a different user such as system processes.
 
 
-
+A lot of the functions used here have been written using the help of erwan.labalec.fr
